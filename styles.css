@@ -28,6 +28,22 @@ html {
     padding: 10px;
     margin-bottom: 5px;
     background-color: #707070;
+    direction: rtl;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+#top-display{
+    padding: 5px;
+    height: 30px;
+    font-size: 20px;
+}
+
+#bot-display{
+    padding: 10px;
+    height: 60px;
+    font-size: 40px;
 }
 
 #buttons-container{
