@@ -4,7 +4,7 @@ const displayBot = document.querySelector('#bot-display');
 let topStr = "";
 let topNum = 0;
 let currNum = 0;
-
+let equalsResult = undefined;
 
 
 const button0 = document.querySelector('#zero');
@@ -36,7 +36,7 @@ function numPressed(num){
         processClear();        
     }
     currNum *= 10;
-    currNum += num
+    currNum += num;
     displayBot.textContent = currNum;
 }
 
@@ -56,7 +56,7 @@ button9.addEventListener('click', ()=>numPressed(9));
 function eval(){
     if(!topStr)
         return;
-    firstNumber = parseInt(topStr.substring(2))
+    firstNumber = parseInt(topStr.substring(2));
     switch(topStr[0]){
         case "+":
             return firstNumber + currNum;
@@ -68,7 +68,7 @@ function eval(){
             if(currNum === 0){
                 displayBot.textContent = "Can't divide by 0";
                 displayTop.textContent = "Error";
-                return
+                return;
             }
             return firstNumber / currNum;
             
@@ -76,37 +76,41 @@ function eval(){
 }
 
 function processOperation(operation){
-    if(topStr){
+    if(topStr && equalsResult === undefined){
         currNum = eval();
-
         if(displayBot.textContent === "Can't divide by 0") return;
-
         displayBot.textContent = currNum;
     }
+
     topNum = currNum;
+
+    if(equalsResult !== undefined){
+        topNum = equalsResult;
+        equalsResult = undefined;
+    }
 
     switch(operation){
         case "add":
-            topStr = "+ " + Math.abs(currNum);
+            topStr = "+ " + Math.abs(topNum);
             break;
         case "sub":
-            topStr = "- " + Math.abs(currNum);
+            topStr = "- " + Math.abs(topNum);
             break;
         case "mult":
-            topStr = "× " + Math.abs(currNum);
+            topStr = "× " + Math.abs(topNum);
             break;
         case "div":
-            topStr = "/ " + Math.abs(currNum);
+            topStr = "/ " + Math.abs(topNum);
             break;
     }
     currNum = 0;
     displayTop.textContent = topStr;
 }
 
-buttonAdd.addEventListener('click',()=>processOperation("add"))
-buttonSub.addEventListener('click',()=>processOperation("sub"))
-buttonMult.addEventListener('click',()=>processOperation("mult"))
-buttonDiv.addEventListener('click',()=>processOperation("div"))
+buttonAdd.addEventListener('click',()=>processOperation("add"));
+buttonSub.addEventListener('click',()=>processOperation("sub"));
+buttonMult.addEventListener('click',()=>processOperation("mult"));
+buttonDiv.addEventListener('click',()=>processOperation("div"));
 
 function processEquals(){
     if(!topStr) return;
@@ -115,30 +119,32 @@ function processEquals(){
 
     displayTop.textContent = " = " + currNum + " " + topStr;
     if(result < 0)
-        result = Math.abs(result) + "-"
-    displayBot.textContent = result
-    currNum = 0
+        result = Math.abs(result) + "-";
+    displayBot.textContent = result;
+    equalsResult = result;
+    currNum = 0;
 }
 
-buttonEquals.addEventListener('click',()=>processEquals())
+buttonEquals.addEventListener('click',()=>processEquals());
 
 
 function processClear(){
     displayTop.textContent = "";
     displayBot.textContent = "";
-    topStr = ""
+    topStr = "";
     topNum = 0;
     currNum = 0;
+    equalsResult = undefined;
 }
 
-buttonAC.addEventListener('click', ()=>processClear())
+buttonAC.addEventListener('click', ()=>processClear());
 
 
 function processDelete(){
     if(currNum == 0) return;
     
     if(currNum < 10){
-        currNum = 0
+        currNum = 0;
     } else {
         currNum = parseInt(currNum.toString().substring(0, currNum.toString().length - 1));
     } 
@@ -146,4 +152,4 @@ function processDelete(){
     displayBot.textContent = currNum;
 }
 
-buttonDEL.addEventListener('click',()=>processDelete())
+buttonDEL.addEventListener('click',()=>processDelete());
