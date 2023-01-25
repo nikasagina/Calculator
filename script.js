@@ -172,3 +172,10 @@ function processDot(){
 }
 
 buttonDot.addEventListener('click',()=>processDot());
+
+function processPercent(){
+    currNum/=100;
+    displayBot.textContent = currNum;
+}
+
+buttonPercent.addEventListener('click', ()=>processPercent());
