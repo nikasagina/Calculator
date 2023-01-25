@@ -33,9 +33,7 @@ const buttonEquals = document.querySelector('#equals-button');
 function numPressed(num){
 
     if(displayTop.textContent === "Error"){ // reset displays
-        displayTop.textContent = "";
-        displayBot.textContent = "";
-        currNum = 0;
+        processClear();        
     }
     currNum *= 10;
     currNum += num
@@ -113,10 +111,39 @@ buttonDiv.addEventListener('click',()=>processOperation("div"))
 function processEquals(){
     if(!topStr) return;
     result = eval();
+    if(displayBot.textContent === "Can't divide by 0") return;
+
     displayTop.textContent = " = " + currNum + " " + topStr;
     if(result < 0)
         result = Math.abs(result) + "-"
     displayBot.textContent = result
+    currNum = 0
 }
 
 buttonEquals.addEventListener('click',()=>processEquals())
+
+
+function processClear(){
+    displayTop.textContent = "";
+    displayBot.textContent = "";
+    topStr = ""
+    topNum = 0;
+    currNum = 0;
+}
+
+buttonAC.addEventListener('click', ()=>processClear())
+
+
+function processDelete(){
+    if(currNum == 0) return;
+    
+    if(currNum < 10){
+        currNum = 0
+    } else {
+        currNum = parseInt(currNum.toString().substring(0, currNum.toString().length - 1));
+    } 
+    
+    displayBot.textContent = currNum;
+}
+
+buttonDEL.addEventListener('click',()=>processDelete())
