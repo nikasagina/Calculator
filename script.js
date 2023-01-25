@@ -109,3 +109,14 @@ buttonAdd.addEventListener('click',()=>processOperation("add"))
 buttonSub.addEventListener('click',()=>processOperation("sub"))
 buttonMult.addEventListener('click',()=>processOperation("mult"))
 buttonDiv.addEventListener('click',()=>processOperation("div"))
+
+function processEquals(){
+    if(!topStr) return;
+    result = eval();
+    displayTop.textContent = " = " + currNum + " " + topStr;
+    if(result < 0)
+        result = Math.abs(result) + "-"
+    displayBot.textContent = result
+}
+
+buttonEquals.addEventListener('click',()=>processEquals())
