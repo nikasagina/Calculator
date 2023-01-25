@@ -1,8 +1,10 @@
-const diplayTop = document.querySelector('#top-display');
+const displayTop = document.querySelector('#top-display');
 const displayBot = document.querySelector('#bot-display');
 
-let currResult = 0;
+let topStr = "";
+let topNum = 0;
 let currNum = 0;
+
 
 
 const button0 = document.querySelector('#zero');
@@ -29,6 +31,12 @@ const buttonEquals = document.querySelector('#equals-button');
 
 
 function numPressed(num){
+
+    if(displayTop.textContent === "Error"){ // reset displays
+        displayTop.textContent = "";
+        displayBot.textContent = "";
+        currNum = 0;
+    }
     currNum *= 10;
     currNum += num
     displayBot.textContent = currNum;
@@ -45,4 +53,59 @@ button7.addEventListener('click', ()=>numPressed(7));
 button8.addEventListener('click', ()=>numPressed(8));
 button9.addEventListener('click', ()=>numPressed(9));
 
+// evaluates top string with current number
+// returns result
+function eval(){
+    if(!topStr)
+        return;
+    firstNumber = parseInt(topStr.substring(2))
+    switch(topStr[0]){
+        case "+":
+            return firstNumber + currNum;
+        case "-":
+            return firstNumber - currNum;
+        case "×":
+            return firstNumber * currNum;
+        case "/":
+            if(currNum === 0){
+                displayBot.textContent = "Can't divide by 0";
+                displayTop.textContent = "Error";
+                return
+            }
+            return firstNumber / currNum;
+            
+    }
+}
 
+function processOperation(operation){
+    if(topStr){
+        currNum = eval();
+
+        if(displayBot.textContent === "Can't divide by 0") return;
+
+        displayBot.textContent = currNum;
+    }
+    topNum = currNum;
+
+    switch(operation){
+        case "add":
+            topStr = "+ " + Math.abs(currNum);
+            break;
+        case "sub":
+            topStr = "- " + Math.abs(currNum);
+            break;
+        case "mult":
+            topStr = "× " + Math.abs(currNum);
+            break;
+        case "div":
+            topStr = "/ " + Math.abs(currNum);
+            break;
+    }
+    currNum = 0;
+    displayTop.textContent = topStr;
+}
+
+buttonAdd.addEventListener('click',()=>processOperation("add"))
+buttonSub.addEventListener('click',()=>processOperation("sub"))
+buttonMult.addEventListener('click',()=>processOperation("mult"))
+buttonDiv.addEventListener('click',()=>processOperation("div"))
