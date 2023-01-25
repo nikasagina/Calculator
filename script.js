@@ -5,7 +5,8 @@ let topStr = "";
 let topNum = 0;
 let currNum = 0;
 let equalsResult = undefined;
-
+let isDecimal = false;
+let firstDot = false;
 
 const button0 = document.querySelector('#zero');
 const button1 = document.querySelector('#one');
@@ -28,15 +29,19 @@ const buttonMult = document.querySelector('#mult');
 const buttonDiv = document.querySelector('#div');
 
 const buttonEquals = document.querySelector('#equals-button');
-
+const buttonDot = document.querySelector('#dot');
 
 function numPressed(num){
 
     if(displayTop.textContent === "Error"){ // reset displays
         processClear();        
     }
-    currNum *= 10;
-    currNum += num;
+
+    if(isDecimal && firstDot){
+            currNum = Number(String(currNum)+ "." + String(num));
+            firstDot = false;
+    } else currNum = Number(String(currNum) + String(num));
+
     displayBot.textContent = currNum;
 }
 
@@ -56,7 +61,7 @@ button9.addEventListener('click', ()=>numPressed(9));
 function eval(){
     if(!topStr)
         return;
-    firstNumber = parseInt(topStr.substring(2));
+    firstNumber = parseFloat(topStr.substring(2));
     switch(topStr[0]){
         case "+":
             return firstNumber + currNum;
@@ -127,7 +132,6 @@ function processEquals(){
 
 buttonEquals.addEventListener('click',()=>processEquals());
 
-
 function processClear(){
     displayTop.textContent = "";
     displayBot.textContent = "";
@@ -135,21 +139,36 @@ function processClear(){
     topNum = 0;
     currNum = 0;
     equalsResult = undefined;
+    isDecimal = false;
+    firstDot = false;
 }
 
 buttonAC.addEventListener('click', ()=>processClear());
 
-
 function processDelete(){
     if(currNum == 0) return;
     
-    if(currNum < 10){
+    if(currNum < 10 && !isDecimal){
         currNum = 0;
     } else {
-        currNum = parseInt(currNum.toString().substring(0, currNum.toString().length - 1));
+        console.log(currNum)
+        currNum = parseFloat(currNum.toString().substring(0, currNum.toString().length - 1));
+        if(!Number.isInteger(currNum)){
+            isDecimal = false;
+            firstDot = false;
+        }
     } 
     
     displayBot.textContent = currNum;
 }
 
 buttonDEL.addEventListener('click',()=>processDelete());
+
+function processDot(){
+    if(!Number.isInteger(currNum)) return;
+    displayBot.textContent = "." + currNum;
+    isDecimal = true;
+    firstDot = true;
+}
+
+buttonDot.addEventListener('click',()=>processDot());
